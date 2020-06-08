@@ -52,6 +52,7 @@ if ( ! function_exists( 'cs_setup' ) ) :
 			array(
 				'menu-1' => esc_html__( 'Primary', 'cs' ),
 				'menu-2' => esc_html__( 'Secondary', 'cs' ),
+				'menu-tags' => esc_html__( 'Tag Cloud', 'cs' ),
 			)
 		);
 
@@ -186,15 +187,8 @@ if ( defined( 'JETPACK__VERSION' ) ) {
 }
 
 
-//
-//function cs_menu_classes($classes, $item, $args) {
-//    if($args->theme_location == 'menu-1') {
-//        $classes[] = 'text-menu flex text-17 items-center py-4 px-6 hover:text-white hover:bg-menu1-hover';
-//    }
-//    return $classes;
-//}
-//add_filter('nav_menu_css_class', 'cs_menu_classes', 1, 3);
 
+//CUSTOM
 
 //menu 1 walker
     class Walker_Nav_Primary extends Walker_Nav_Menu {
@@ -239,7 +233,7 @@ if ( defined( 'JETPACK__VERSION' ) ) {
     }
 }
 
-//menu 1 walker
+//menu 2 walker
 class Walker_Nav_Secondary extends Walker_Nav_Menu {
     function start_el(&$output, $item, $depth=0, $args=array(), $id = 0) {
         $indent = ( $depth ) ? str_repeat("\t",$depth) : '';
@@ -280,3 +274,124 @@ class Walker_Nav_Secondary extends Walker_Nav_Menu {
         $output .= apply_filters ( 'walker_nav_menu_start_el', $item_output, $item, $depth, $args );
     }
 }
+
+//menu tags walker
+class Walker_Nav_Tags extends Walker_Nav_Menu {
+    function start_el(&$output, $item, $depth=0, $args=array(), $id = 0) {
+        $indent = ( $depth ) ? str_repeat("\t",$depth) : '';
+
+        $li_attributes = '';
+        $class_names = $value = '';
+
+        $classes = empty( $item->classes ) ? array() : (array) $item->classes;
+
+        $classes[] = ($args->walker->has_children) ? 'dropdown' : '';
+        $classes[] = ($item->current || $item->current_item_ancestor) ? 'active' : '';
+        $classes[] = 'menu-item-' . $item->ID;
+        if( $depth && $args->walker->has_children ){
+            $classes[] = 'dropdown-submenu';
+        }
+
+        $class_names =  join(' ', apply_filters('nav_menu_css_class', array_filter( $classes ), $item, $args ) );
+        $class_names = ' class="' . esc_attr($class_names) . '"';
+
+        $id = apply_filters('nav_menu_item_id', 'menu-item-'.$item->ID, $item, $args);
+        $id = strlen( $id ) ? ' id="' . esc_attr( $id ) . '"' : '';
+
+        $output .= $indent . '<li' . $id . $value . $class_names . $li_attributes . '>';
+
+        $attributes = ! empty( $item->attr_title ) ? ' title="' . esc_attr($item->attr_title) . '"' : '';
+        $attributes .= ! empty( $item->target ) ? ' target="' . esc_attr($item->target) . '"' : '';
+        $attributes .= ! empty( $item->xfn ) ? ' rel="' . esc_attr($item->xfn) . '"' : '';
+        $attributes .= ! empty( $item->url ) ? ' href="' . esc_attr($item->url) . '"' : '';
+
+        $attributes .= ( $args->walker->has_children ) ? ' class="dropdown-toggle" data-toggle="dropdown"' : '';
+
+        $item_output = $args->before;
+        $item_output .= '<a class="block font-semibold text-base py-3 px-4 mr-4 mb-4 border rounded-full hover:text-white hover:bg-menu1-hover"' . $attributes . '>';
+        $item_output .= $args->link_before . apply_filters( 'the_title', $item->title, $item->ID ) . $args->link_after;
+        $item_output .= ( $depth == 0 && $args->walker->has_children ) ? ' <b class="caret"></b></a>' : '</a>';
+        $item_output .= $args->after;
+
+        $output .= apply_filters ( 'walker_nav_menu_start_el', $item_output, $item, $depth, $args );
+    }
+}
+
+
+//acf options
+if( function_exists('acf_add_options_page') ) {
+    acf_add_options_page( array(
+        'menu_title' => __('NUSTATYMAI')
+    ) );
+}
+
+//in homepage show specific post
+function wpsites_home_page_limit( $query ) {
+    if ( $query->is_home() && $query->is_main_query() && !is_admin() ) {
+//        $query->set( 'posts_per_page', '1' );
+        $acf_main_post = get_field('main_post', 'option');
+        $query->set ('post__in', array($acf_main_post));
+    }
+}
+add_action( 'pre_get_posts', 'wpsites_home_page_limit' );
+
+// [title title="kazkas" link="kazkas2"]
+function title_func( $atts ) {
+    $a = shortcode_atts( array(
+        'title' => 'taitlas',
+        'link' => 'linkas',
+    ), $atts );
+    return '
+        <a href="'.$a['link'].'" class="block">
+            <h1 class="flex items-center font-bold text-4xl md:text-32 underline mb-6 md:mb-10 text-black leading-tight">
+                <img class="mr-3 w-12 h-12 self-start md:self-auto" src="'.get_template_directory_uri().'/custom-assets/img/bot3.png" alt="menu-icon">'.$a['title'].'</h1>
+        </a>
+    ';
+}
+add_shortcode( 'title', 'title_func' );
+
+// [button exe="kazkas" torrent="kazkas2"]
+function button_func( $atts ) {
+    $a = shortcode_atts( array(
+        'exe' => 'linkas',
+        'torrent' => 'linkas',
+    ), $atts );
+    return '
+    <div class="flex justify-center pb-10 md:pb-24">
+        <a href="'.$a['exe'].'" class="bg-btn-red flex max-w-xs rounded-md text-white mr-10">
+            <div class="flex items-center border-r border-dashed border-white border-opacity-75 p-2 md:p-4">
+                <div>
+                    <img class="w-12 h-12 md:w-16 md:h-16" src="'.get_template_directory_uri().'/custom-assets/img/bot.svg" alt="bot">
+                </div>
+                <div class="leading-none">
+                    <span class="font-semibold text-xl md:text-17">
+                        Download
+                    </span>
+                    <br>
+                    <span class="text-base md:text-xl">Setup</span>
+                </div>
+            </div>
+            <div class="px-4 md:px-6 flex justify-center items-center">
+                <img class="w-4 h-4" src="'.get_template_directory_uri().'/custom-assets/img/arrow.svg" alt="arrow">
+            </div>
+        </a>
+        <a href="'.$a['torrent'].'" class="bg-btn-trans bg-btn-trans--black flex max-w-xs rounded-md text-white border border-white">
+            <div class="flex items-center border-r border-dashed border-white border-opacity-75 p-2 md:p-4">
+                <div>
+                    <img class="w-12 h-12 md:w-16 md:h-16" src="'.get_template_directory_uri().'/custom-assets/img/bot.svg" alt="bot">
+                </div>
+                <div class="leading-none">
+                    <span class="font-semibold text-xl md:text-17">
+                        Download
+                    </span>
+                    <br>
+                    <span class="text-base md:text-xl">Torrent file</span>
+                </div>
+            </div>
+            <div class="px-4 md:px-6 flex justify-center items-center">
+                <img class="w-4 h-4" src="'.get_template_directory_uri().'/custom-assets/img/arrow.svg" alt="arrow">
+            </div>
+        </a>
+    </div>';
+}
+add_shortcode( 'button', 'button_func' );

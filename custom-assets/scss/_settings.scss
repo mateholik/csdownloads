@@ -144,9 +144,42 @@ $hamburger-layer-height: 0.2rem !default;
     border-top: 1px solid #1F1F1F;
   }
 }
-//nav
+
+#menu-menu-1 .active a {
+  @apply text-white bg-menu1-hover;
+}
+#menu-menu-2 .active a {
+  @apply text-white bg-menu2-hover;
+}
+#sidebar li.active {
+  &:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -3rem;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(88.78deg, rgba(155, 47, 47, 0.49) 11.03%, rgba(155, 47, 47, 0) 96.59%);
+  }
+}
+//nav end
 
 
-.article img {
-  width: auto;
+.article {
+  img {
+    width: auto;
+    display: inline;
+  }
+  p {
+    margin-bottom: 0.5rem;
+  }
+}
+
+footer p {
+  margin-bottom: 1rem;
+}
+footer a {
+  &:hover {
+    color: white;
+  }
 }

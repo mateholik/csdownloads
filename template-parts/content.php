@@ -1,6 +1,6 @@
 <?php
 /**
- * Template part for displaying posts
+ * Template part for displaying page content in page.php
  *
  * @link https://developer.wordpress.org/themes/basics/template-hierarchy/
  *
@@ -8,56 +8,28 @@
  */
 
 ?>
+<div class="content relative bg-white w-full">
+    <article id="post-<?php the_ID(); ?>" class="article w-full md:px-24 py-12">
+        <?php if(is_page()): ?>
+            <h1 class="flex items-center font-bold text-4xl md:text-32 mb-6 md:mb-10 text-black leading-tight">
+                <img class="mr-3 w-12 h-12 self-start md:self-auto" src="<?php echo get_template_directory_uri(); ?>/custom-assets/img/bot3.png" alt="menu-icon">
+                <?php the_title(); ?>
+            </h1>
+        <?php endif; ?>
+        <?php the_content(); ?>
+    </article><!-- #post-<?php the_ID(); ?> -->
 
-<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-	<header class="entry-header">
-		<?php
-		if ( is_singular() ) :
-			the_title( '<h1 class="entry-title">', '</h1>' );
-		else :
-			the_title( '<h2 class="entry-title"><a href="' . esc_url( get_permalink() ) . '" rel="bookmark">', '</a></h2>' );
-		endif;
-
-		if ( 'post' === get_post_type() ) :
-			?>
-			<div class="entry-meta">
-				<?php
-				cs_posted_on();
-				cs_posted_by();
-				?>
-			</div><!-- .entry-meta -->
-		<?php endif; ?>
-	</header><!-- .entry-header -->
-
-	<?php cs_post_thumbnail(); ?>
-
-	<div class="entry-content">
-		<?php
-		the_content(
-			sprintf(
-				wp_kses(
-					/* translators: %s: Name of current post. Only visible to screen readers */
-					__( 'Continue reading<span class="screen-reader-text"> "%s"</span>', 'cs' ),
-					array(
-						'span' => array(
-							'class' => array(),
-						),
-					)
-				),
-				wp_kses_post( get_the_title() )
-			)
-		);
-
-		wp_link_pages(
-			array(
-				'before' => '<div class="page-links">' . esc_html__( 'Pages:', 'cs' ),
-				'after'  => '</div>',
-			)
-		);
-		?>
-	</div><!-- .entry-content -->
-
-	<footer class="entry-footer">
-		<?php cs_entry_footer(); ?>
-	</footer><!-- .entry-footer -->
-</article><!-- #post-<?php the_ID(); ?> -->
+    <nav class="md:px-24 pb-12">
+        <div class="h-px w-full" style="background: #EDEBEB"></div>
+        <h3 class="py-10 text-4xl md:text-32 text-center text-black">TAG CLOUD</h3>
+        <?php
+        wp_nav_menu(
+            array(
+                'theme_location' => 'menu-tags',
+                'menu_class'        => 'flex flex-wrap',
+                'walker'         => new Walker_Nav_Tags()
+            )
+        );
+        ?>
+    </nav>
+</div>

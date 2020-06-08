@@ -19058,8 +19058,45 @@ p {
   border-top: 1px solid #1F1F1F;
 }
 
+#menu-menu-1 .active a {
+  --text-opacity: 1;
+  color: #fff;
+  color: rgba(255, 255, 255, var(--text-opacity));
+  background: #4F4F4F;
+}
+
+#menu-menu-2 .active a {
+  --text-opacity: 1;
+  color: #fff;
+  color: rgba(255, 255, 255, var(--text-opacity));
+  background: #2B2A2A;
+}
+
+#sidebar li.active:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -3rem;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(88.78deg, rgba(155, 47, 47, 0.49) 11.03%, rgba(155, 47, 47, 0) 96.59%);
+}
+
 .article img {
   width: auto;
+  display: inline;
+}
+
+.article p {
+  margin-bottom: 0.5rem;
+}
+
+footer p {
+  margin-bottom: 1rem;
+}
+
+footer a:hover {
+  color: white;
 }
 
 @media (min-width: 640px) {
