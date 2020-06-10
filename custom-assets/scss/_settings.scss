@@ -11,16 +11,11 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-h1, h2, h3 {
+h1, h2, h3, h4, h5, h6 {
   font-family: 'Open Sans Condensed', sans-serif;
 }
 strong, b {
   font-weight: 600;
-  color: #cd8b0a;
-}
-img {
-  width:100%;
-  height: auto;
 }
 p {
   margin-bottom: 2.5rem;
@@ -127,16 +122,6 @@ p {
   }
 }
 
-
-//nav
-$hamburger-padding-x: 0;
-$hamburger-padding-y: 0;
-$hamburger-layer-width: 3rem;
-$hamburger-layer-spacing: 0.6rem;
-$hamburger-layer-color: #fff;
-$hamburger-layer-border-radius: 0;
-$hamburger-layer-height: 0.2rem !default;
-@import "hamburgers/_sass/hamburgers/hamburgers";
 .mob-nav {
   display: none;
   &--active {
@@ -166,14 +151,41 @@ $hamburger-layer-height: 0.2rem !default;
 
 
 .article {
+
+  .block {
+    display: block;
+    clear: both;
+    margin-bottom: 50px;
+  }
   img {
-    width: auto;
+    max-width: 300px;
+    float: left;
+    margin: 0 5px;
     display: inline;
+    padding: 5px;
+    padding-right: 15px;
+    height: auto;
+  }
+  a.block {
+    margin-bottom: 0;
+  }
+  h1, h2, h3, h4, h5, h6, .btns {
+    img {
+      padding: 0;
+      float: none;
+    }
   }
   p {
-    margin-bottom: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  .clear {
+    clear: both;
+    width: 100%;
+    height: 1px;
+    display: block;
   }
 }
+
 
 footer p {
   margin-bottom: 1rem;
@@ -183,3 +195,5 @@ footer a {
     color: white;
   }
 }
+
+

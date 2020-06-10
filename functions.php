@@ -52,7 +52,6 @@ if ( ! function_exists( 'cs_setup' ) ) :
 			array(
 				'menu-1' => esc_html__( 'Primary', 'cs' ),
 				'menu-2' => esc_html__( 'Secondary', 'cs' ),
-				'menu-tags' => esc_html__( 'Tag Cloud', 'cs' ),
 			)
 		);
 
@@ -338,13 +337,14 @@ add_action( 'pre_get_posts', 'wpsites_home_page_limit' );
 // [title title="kazkas" link="kazkas2"]
 function title_func( $atts ) {
     $a = shortcode_atts( array(
+        'size' => 'h2',
         'title' => 'taitlas',
         'link' => 'linkas',
     ), $atts );
     return '
-        <a href="'.$a['link'].'" class="block">
-            <h1 class="flex items-center font-bold text-4xl md:text-32 underline mb-6 md:mb-10 text-black leading-tight">
-                <img class="mr-3 w-12 h-12 self-start md:self-auto" src="'.get_template_directory_uri().'/custom-assets/img/bot3.png" alt="menu-icon">'.$a['title'].'</h1>
+        <a href="'.$a['link'].'" class="block" title="'.$a['title'].'">
+        <'.$a['size'].' class="flex items-baseline font-bold text-4xl md:text-32 underline mb-6 md:mb-10 text-black leading-tight">
+            <img class="relative mr-3 w-12 h-12 self-start md:self-auto" style="top:0.4rem;" alt="'.$a['title'].'" src="'.get_template_directory_uri().'/custom-assets/img/bot3.png" alt="menu-icon">'.$a['title'].'</'.$a['size'].'>
         </a>
     ';
 }
@@ -353,12 +353,14 @@ add_shortcode( 'title', 'title_func' );
 // [button exe="kazkas" torrent="kazkas2"]
 function button_func( $atts ) {
     $a = shortcode_atts( array(
-        'exe' => 'linkas',
-        'torrent' => 'linkas',
+        'exe' => 'https://www.csdownload.lt/Counter-Strike 1.6-original.exe',
+        'title1' => 'CS 1.6 download - Click and download Counter-strike 1.6 game setup file from our website directly and for free!',
+        'torrent' => 'http://www.redirektas.lt/Counter-Strike 1.6-original.exe.torrent',
+        'title2' => 'Counter Strike 1.6 torrent download - click and download cs torrent from csdownload.lt website, install and enjoy!',
     ), $atts );
     return '
-    <div class="flex justify-center pb-10 md:pb-24">
-        <a href="'.$a['exe'].'" class="bg-btn-red flex max-w-xs rounded-md text-white mr-10">
+    <div class="btns flex justify-center py-10 md:py-20">
+        <a href="'.$a['exe'].'" class="bg-btn-red flex max-w-xs rounded-md text-white mr-10" title="'.$a['title1'].'">
             <div class="flex items-center border-r border-dashed border-white border-opacity-75 p-2 md:p-4">
                 <div>
                     <img class="w-12 h-12 md:w-16 md:h-16" src="'.get_template_directory_uri().'/custom-assets/img/bot.svg" alt="bot">
@@ -375,7 +377,7 @@ function button_func( $atts ) {
                 <img class="w-4 h-4" src="'.get_template_directory_uri().'/custom-assets/img/arrow.svg" alt="arrow">
             </div>
         </a>
-        <a href="'.$a['torrent'].'" class="bg-btn-trans bg-btn-trans--black flex max-w-xs rounded-md text-white border border-white">
+        <a href="'.$a['torrent'].'" class="bg-btn-trans bg-btn-trans--black flex max-w-xs rounded-md text-white border border-white" title="'.$a['title2'].'">
             <div class="flex items-center border-r border-dashed border-white border-opacity-75 p-2 md:p-4">
                 <div>
                     <img class="w-12 h-12 md:w-16 md:h-16" src="'.get_template_directory_uri().'/custom-assets/img/bot.svg" alt="bot">
@@ -395,3 +397,86 @@ function button_func( $atts ) {
     </div>';
 }
 add_shortcode( 'button', 'button_func' );
+
+//** *Enable upload for webp image files.*/
+function webp_upload_mimes($existing_mimes) {
+    $existing_mimes['webp'] = 'image/webp';
+    return $existing_mimes;
+}
+add_filter('mime_types', 'webp_upload_mimes');
+
+//** * Enable preview / thumbnail for webp image files.*/
+function webp_is_displayable($result, $path) {
+    if ($result === false) {
+        $displayable_image_types = array( IMAGETYPE_WEBP );
+        $info = @getimagesize( $path );
+
+        if (empty($info)) {
+            $result = false;
+        } elseif (!in_array($info[2], $displayable_image_types)) {
+            $result = false;
+        } else {
+            $result = true;
+        }
+    }
+
+    return $result;
+}
+add_filter('file_is_displayable_image', 'webp_is_displayable', 10, 2);
+
+
+//allow . in permalink
+
+
+remove_filter('sanitize_title', 'sanitize_title_with_dashes');
+
+function sanitize_title_with_dots_and_dashes($title) {
+    $title = strip_tags($title);
+    // Preserve escaped octets.
+    $title = preg_replace('|%([a-fA-F0-9][a-fA-F0-9])|', '---$1---', $title);
+    // Remove percent signs that are not part of an octet.
+    $title = str_replace('%', '', $title);
+    // Restore octets.
+    $title = preg_replace('|---([a-fA-F0-9][a-fA-F0-9])---|', '%$1', $title);
+
+    $title = remove_accents($title);
+    if (seems_utf8($title)) {
+        if (function_exists('mb_strtolower')) {
+            $title = mb_strtolower($title, 'UTF-8');
+        }
+        $title = utf8_uri_encode($title);
+    }
+
+    $title = strtolower($title);
+    $title = preg_replace('/&.+?;/', '', $title); // kill entities
+    $title = preg_replace('/[^%a-z0-9 ._-]/', '', $title);
+    $title = preg_replace('/\s+/', '-', $title);
+    $title = preg_replace('|-+|', '-', $title);
+    $title = trim($title, '-');
+    $title = str_replace('-.-', '.', $title);
+    $title = str_replace('-.', '.', $title);
+    $title = str_replace('.-', '.', $title);
+    $title = preg_replace('|([^.])\.$|', '$1', $title);
+    $title = trim($title, '-'); // yes, again
+
+    return $title;
+}
+add_filter('sanitize_title', 'sanitize_title_with_dots_and_dashes');
+
+//
+//add_filter( 'post_link', 'custom_permalink', 10, 3 );
+//function custom_permalink( $permalink, $post, $leavename ) {
+//    // Get the categories for the post
+//    $category = get_the_category($post->ID);
+//    if (  !empty($category) && $category[0]->cat_name == "Tag posts" ) {
+//        $permalink = trailingslashit( home_url('/'. $post->post_name .'-'. $post->ID .'/' ) );
+//    }
+//    return $permalink;
+//}
+//add_action('generate_rewrite_rules', 'custom_rewrite_rules');
+//function custom_rewrite_rules( $wp_rewrite ) {
+//    // This rule will will match the post id in %postname%-%post_id% struture
+//    $new_rules['^([^/]*)-([0-9]+)/?'] = 'index.php?p=$matches[2]';
+//    $wp_rewrite->rules = $new_rules + $wp_rewrite->rules;
+//    return $wp_rewrite;
+//}

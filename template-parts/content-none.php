@@ -8,44 +8,18 @@
  */
 
 ?>
+<div class="content relative bg-white w-full">
+    <div class="article w-full md:px-24 py-12">
+    <div class="flex">
+        <div>
+            <h2 class="text-3xl md:text-6xl text-black mb-8 mt-32">Page doesn't exist</h2>
+            <a href="<?php echo home_url(); ?>" class="hover:text-black">Back to homepage</a>
+        </div>
+        <div>
+            <img class="" src="<?php echo get_template_directory_uri(); ?>/custom-assets/img/404.png" alt="not found">
+        </div>
+    </div>
 
-<section class="no-results not-found">
-	<header class="page-header">
-		<h1 class="page-title"><?php esc_html_e( 'Nothing Found', 'cs' ); ?></h1>
-	</header><!-- .page-header -->
+    </article>
 
-	<div class="page-content">
-		<?php
-		if ( is_home() && current_user_can( 'publish_posts' ) ) :
-
-			printf(
-				'<p>' . wp_kses(
-					/* translators: 1: link to WP admin new post page. */
-					__( 'Ready to publish your first post? <a href="%1$s">Get started here</a>.', 'cs' ),
-					array(
-						'a' => array(
-							'href' => array(),
-						),
-					)
-				) . '</p>',
-				esc_url( admin_url( 'post-new.php' ) )
-			);
-
-		elseif ( is_search() ) :
-			?>
-
-			<p><?php esc_html_e( 'Sorry, but nothing matched your search terms. Please try again with some different keywords.', 'cs' ); ?></p>
-			<?php
-			get_search_form();
-
-		else :
-			?>
-
-			<p><?php esc_html_e( 'It seems we can&rsquo;t find what you&rsquo;re looking for. Perhaps searching can help.', 'cs' ); ?></p>
-			<?php
-			get_search_form();
-
-		endif;
-		?>
-	</div><!-- .page-content -->
-</section><!-- .no-results -->
+</div>
