@@ -38,7 +38,7 @@ if ( ! is_active_sidebar( 'sidebar-1' ) ) {
                                 $isActive = $link_url == "https://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] || $link_url == "http://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] ? 'active' : '';
                                 ?>
                                 <li class="relative z-10 bg-sidebar-hover text-2xl <?php echo $isActive; ?>" style="color: #B6B6B6">
-                                    <a href="<?php echo esc_url( $link_url ); ?>" target="<?php echo esc_attr( $link_target ); ?>" class="block relative z-20 py-4"><?php echo esc_html( $link_title ); ?></a>
+                                    <a href="<?php echo esc_url( $link_url ); ?>" title="<?php echo esc_html( $link_title ); ?>" target="<?php echo esc_attr( $link_target ); ?>" class="block relative z-20 py-4"><?php echo esc_html( $link_title ); ?></a>
                                 </li>
                             <?php endwhile; ?>
                         </ul>

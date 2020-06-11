@@ -36,15 +36,15 @@
         <div style="background-image: url('<?php echo get_template_directory_uri(); ?>/custom-assets/img/cover.jpg')" class="bg-no-repeat bg-center bg-cover">
             <div class="container">
                 <div class="bg-black md:bg-transparent flex justify-between items-center py-4 md:pt-12 md:pb-6 -mx-6 md:mx-0 px-6 md:px-0">
-                    <a href="<?php echo home_url(); ?>" class="w-56 md:w-full md:max-w-md">
+                    <a href="<?php echo home_url(); ?>" class="w-64 md:w-full md:max-w-md">
                         <img src="<?php echo get_template_directory_uri(); ?>/custom-assets/img/logo.png" alt="logo">
                     </a>
                     <div class="flex">
-                        <a href="<?php echo get_field('fb_link', 'option') ?>" target="_blank" class="mr-4 md:mr-6">
-                            <img class="w-8 h-8 md:w-10 md:h-10" src="<?php echo get_template_directory_uri(); ?>/custom-assets/img/fb.svg" alt="facebook">
+                        <a href="<?php echo get_field('fb_link', 'option') ?>" target="_blank" class="mr-6">
+                            <img class="w-10 h-10" src="<?php echo get_template_directory_uri(); ?>/custom-assets/img/fb.svg" alt="facebook">
                         </a>
                         <a href="<?php echo get_field('twitter_link', 'option') ?>" target="_blank">
-                            <img class="w-8 h-8 md:w-10 md:h-10" src="<?php echo get_template_directory_uri(); ?>/custom-assets/img/twit.svg" alt="twitter">
+                            <img class="w-10 h-10" src="<?php echo get_template_directory_uri(); ?>/custom-assets/img/twit.svg" alt="twitter">
                         </a>
                     </div>
                 </div>

@@ -22,25 +22,27 @@
     <nav class="md:px-24 pb-12">
         <div class="h-px w-full" style="background: #EDEBEB"></div>
         <h3 class="py-10 text-4xl md:text-32 text-center text-black">TAG CLOUD</h3>
+
         <?php
-        // check for rows (parent repeater)
-        if( have_rows('tag_posts', 'option') ): ?>
-        <ul class="flex flex-wrap">
-            <?php
-            // loop through rows (parent repeater)
-            while( have_rows('tag_posts', 'option') ): the_row();
-                $link = get_sub_field('post');
-                $link_url = $link['url'];
-                $link_title = $link['title'];
-                $link_target = $link['target'] ? $link['target'] : '_self';
-                $isActive = $link_url == "https://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] || $link_url == "http://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] ? 'active' : '';
-                ?>
-                <li>
-                    <a href="<?php echo esc_url( $link_url ); ?>" target="<?php echo esc_attr( $link_target ); ?>" class="block font-semibold text-base py-3 px-4 mr-4 mb-4 border rounded-full hover:text-white hover:bg-menu1-hover <?php echo $isActive; ?>"><?php echo esc_html( $link_title ); ?></a>
-                </li>
-                <?php
-            endwhile; ?>
-        </ul>
-        <?php endif;?>
+        $posts = get_posts(array(
+            'posts_per_page'	=> -1,
+            'category_name'	=> 'Tag posts',
+            'post_type'			=> 'post'
+        ));
+
+        if( $posts ): ?>
+            <ul id="tag-cloud" class="flex flex-wrap">
+
+                <?php foreach( $posts as $post ):
+                    $link_url = get_permalink();
+                    $isActive = $link_url == "https://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] || $link_url == "http://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] ? 'text-white bg-menu1-hover' : '';
+                    ?>
+                    <li>
+                        <a href="<?php the_permalink(); ?>" class="block font-semibold text-base py-3 px-4 mr-4 mb-4 border rounded-full hover:text-white hover:bg-menu1-hover <?php echo $isActive; ?>"><?php the_title(); ?></a>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+            <?php wp_reset_postdata(); ?>
+        <?php endif; ?>
     </nav>
 </div>
